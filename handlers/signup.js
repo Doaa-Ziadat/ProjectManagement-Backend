@@ -4,8 +4,8 @@ const post = (req, res) => {
   const data = req.body;
   //check if the user already exists
   console.log(data);
-  db.query("SELECT * FROM users WHERE email=$1", [data.email]).then(
-    (response) => {
+  db.query("SELECT * FROM users WHERE email=$1", [data.email])
+    .then((response) => {
       if (!response.rows.length) {
         db.query(
           "INSERT INTO users(name, email ,password, adminFlag)  VALUES($1,$2,$3,$4)",
@@ -16,8 +16,11 @@ const post = (req, res) => {
       } else {
         res.send({ success: false, message: "Email already exist" });
       }
-    }
-  );
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ success: false });
+    });
 };
 
 module.exports = { post };

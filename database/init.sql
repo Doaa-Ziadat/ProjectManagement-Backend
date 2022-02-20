@@ -17,7 +17,7 @@ CREATE TABLE projects (
     id SERIAL PRIMARY KEY,
     userId INTEGER REFERENCES users(id),
     name TEXT NOT NULL,
-    timeline  DATE NOT NULL,
+    timeline DATE NOT NULL,
     priority VARCHAR(255) ,
     createdAt DATE NOT NULL DEFAULT CURRENT_DATE
 );
