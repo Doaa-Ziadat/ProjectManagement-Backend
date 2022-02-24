@@ -6,7 +6,7 @@ const post = (req, res) => {
   //   res.redirect("http://localhost:3000");
   // }
   const data = req.body;
-  db.query("SELECT password FROM users WHERE email=$1", [data.email])
+  db.query("SELECT password,id FROM users WHERE email=$1", [data.email])
     .then(({ rows }) => {
       if (rows[0]) {
         const user = rows[0];
@@ -18,7 +18,8 @@ const post = (req, res) => {
           const token = jwt.sign({ email }, process.env.JWT_SECRET);
           res.cookie("user", token, { maxAge: 600000 });
           // res.send({ success: true });
-          res.redirect("http://localhost:3000");
+          // res.redirect("http://localhost:3000");
+          res.send({ success: true, email: email, id: user.id });
         }
       } else {
         res.send({ success: false, message: "Incorrect email" });

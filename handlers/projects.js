@@ -3,18 +3,25 @@ const db = require("../database/connection");
 // add project
 const post = (req, res) => {
   const data = req.body;
-  console.log(data);
+  const userId = data.userId;
   db.query(
     "INSERT INTO projects(userId,name,timeline,priority) VALUES($1,$2,$3,$4)",
-    [data.userId, data.name, data.timeline, data.priority]
+    [userId, data.name, data.timeline, data.priority]
   )
     .then(() => {
-      db.query(
-        "INSERT INTO project_member (userId,projectId) VALUES($1,$2)",
-        [1, 2]
-      )
-        .then(() => {
-          res.send({ success: true });
+      db.query(" SELECT MAX( id ) FROM projects")
+        .then(({ rows }) => {
+          db.query(
+            "INSERT INTO project_member (userId,projectId) VALUES($1,$2)",
+            [userId, rows[0].max]
+          )
+            .then(() => {
+              res.send({ success: true });
+            })
+            .catch((err) => {
+              console.log(err);
+              res.send({ success: false });
+            });
         })
         .catch((err) => {
           console.log(err);
@@ -55,8 +62,7 @@ const addMember = (req, res) => {
 // get user's projects
 //TEMP $1 = req.user.email
 const get = (req, res) => {
-  console.log(req.cookies);
-  db.query("SELECT id FROM users WHERE email = $1", ["doaaziadat@gmail.com"])
+  db.query("SELECT id FROM users WHERE email = $1", [req.user.email])
     .then(({ rows }) => {
       const id = rows[0].id;
       db.query(
