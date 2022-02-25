@@ -16,7 +16,7 @@ const post = (req, res) => {
         } else {
           const email = data.email;
           const token = jwt.sign({ email }, process.env.JWT_SECRET);
-          res.cookie("user", token, { maxAge: 600000 });
+          res.cookie("user", token, { maxAge: 6000000 });
           // res.send({ success: true });
           // res.redirect("http://localhost:3000");
           res.send({ success: true, email: email, id: user.id });
