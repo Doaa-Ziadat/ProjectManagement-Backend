@@ -14,6 +14,8 @@ router.post("/add-member", checkAuth, projects.addMember);
 router.get("/projects", checkAuth, projects.get);
 router.get("/tasks/:id", checkAuth, tasks.get);
 router.post("/add-task", checkAuth, tasks.post);
+router.post("/edit-task", checkAuth, tasks.update);
+router.post("/delete-task", checkAuth, tasks.deleteTask);
 
 router.get("/logout", (req, res) => {
   res.clearCookie("user");

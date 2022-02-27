@@ -11,8 +11,6 @@ const get = (req, res) => {
 };
 
 const post = (req, res) => {
-  console.log("in tasks add backend");
-
   const data = req.body;
   const userId = data.userId;
   db.query(
@@ -34,4 +32,40 @@ const post = (req, res) => {
       res.send({ success: false });
     });
 };
-module.exports = { post, get };
+
+const update = (req, res) => {
+  const data = req.body;
+  console.log(data);
+
+  // const userId = data.userId;
+  //,userid=${data.userId}
+  db.query(
+    `UPDATE tasks 
+    SET name='${data.name} ',
+    timeline='${data.timeline}',
+    priority='${data.priority}',
+    processlabel='${data.processlabel}'
+    WHERE id='${data.id}'`
+  )
+    .then(() => {
+      console.log("edited");
+      res.send({ success: true });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ success: false });
+    });
+};
+const deleteTask = (req, res) => {
+  const data = req.body;
+  db.query(`DELETE FROM tasks WHERE id='${data.id}'`)
+    .then(() => {
+      res.send({ success: true });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.send({ success: false });
+    });
+};
+
+module.exports = { post, get, update, deleteTask };
