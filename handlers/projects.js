@@ -3,10 +3,11 @@ const db = require("../database/connection");
 // add project
 const post = (req, res) => {
   const data = req.body;
+
   const userId = data.userId;
   db.query(
-    "INSERT INTO projects(userId,name,timeline,priority) VALUES($1,$2,$3,$4)",
-    [userId, data.name, data.timeline, data.priority]
+    "INSERT INTO projects(userId,name,timeline,priority,publicFlag) VALUES($1,$2,$3,$4,$5)",
+    [userId, data.name, data.timeline, data.priority, data.publicFlag]
   )
     .then(() => {
       db.query(" SELECT MAX( id ) FROM projects")
@@ -34,13 +35,81 @@ const post = (req, res) => {
     });
 };
 
-//add to project_member :
-//TODO: user.id sholud come from frontend
-const addMember = (req, res) => {
+//add to project_member_pending:
+const addMemberPending = (req, res) => {
   const data = req.body;
+  console.log(data);
   db.query("SELECT id FROM users WHERE email = $1", [data.email])
     .then(({ rows }) => {
-      const id = rows[0].id;
+      if (rows[0]) {
+        const id = rows[0].id;
+        // check if user already a member of the project
+        db.query(
+          "SELECT id FROM project_member WHERE userId = $1 AND projectId=$2",
+          [id, data.projectId]
+        ).then(({ rows }) => {
+          if (rows[0]) {
+            res.send({
+              success: false,
+              message: "user already a particepent in this project",
+            });
+          } else {
+            //check if user already been invited
+            db.query(
+              "SELECT id FROM project_member_pending WHERE userId = $1 AND projectId=$2",
+              [id, data.projectId]
+            ).then(({ rows }) => {
+              if (rows[0]) {
+                res.send({
+                  success: false,
+                  message: "user already has been invited to this project",
+                });
+              } else {
+                db.query(
+                  "INSERT INTO project_member_pending (userId,projectId,invitedBy,seenFlag,invitedByEmail,projectName) VALUES($1,$2,$3,$4,$5,$6)",
+                  [
+                    id,
+                    data.projectId,
+                    data.invitedBy,
+                    false,
+                    data.invitedByEmail,
+                    data.projectName,
+                  ]
+                )
+                  .then(() => {
+                    res.send({ success: true });
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    res.send({ success: false });
+                  });
+              }
+            });
+          }
+        });
+      } else {
+        res.send({ success: false, message: "user doesn't exist" });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const addMember = (req, res) => {
+  const data = req.body;
+  const id = data.id;
+  // check if user already a member of the project
+  db.query("SELECT id FROM project_member WHERE userId = $1 AND projectId=$2", [
+    id,
+    data.projectId,
+  ]).then(({ rows }) => {
+    if (rows[0]) {
+      res.send({
+        success: false,
+        message: "user already a particepent in this project",
+      });
+    } else {
       db.query("INSERT INTO project_member (userId,projectId) VALUES($1,$2)", [
         id,
         data.projectId,
@@ -52,16 +121,14 @@ const addMember = (req, res) => {
           console.log(err);
           res.send({ success: false });
         });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.send({ success: false });
-    });
+    }
+  });
 };
 
 // get user's projects
 //TEMP $1 = req.user.email
 const get = (req, res) => {
+  console.log("in user projects ");
   db.query("SELECT id FROM users WHERE email = $1", [req.user.email])
     .then(({ rows }) => {
       const id = rows[0].id;
@@ -84,4 +151,4 @@ const get = (req, res) => {
 
 //edit project
 
-module.exports = { post, get, addMember };
+module.exports = { post, get, addMemberPending, addMember };

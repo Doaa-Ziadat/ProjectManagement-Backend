@@ -1,6 +1,6 @@
 BEGIN;
 
-DROP TABLE IF EXISTS users, projects ,tasks, project_member CASCADE;
+DROP TABLE IF EXISTS users, projects ,tasks, project_member, project_member_pending CASCADE;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -19,14 +19,26 @@ CREATE TABLE projects (
     name TEXT NOT NULL,
     timeline DATE NOT NULL,
     priority VARCHAR(255) ,
+    publicFlag BOOLEAN,
     createdAt DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 
-CREATE TABLE  project_member  (
+CREATE TABLE project_member  (
     id SERIAL PRIMARY KEY,
     userId INTEGER REFERENCES users(id),
     projectId INTEGER REFERENCES projects(id)
+);
+
+CREATE TABLE project_member_pending (
+    id SERIAL PRIMARY KEY,
+    userId INTEGER REFERENCES users(id),
+    projectId INTEGER REFERENCES projects(id),
+    invitedBy INTEGER REFERENCES users(id),
+    invitedByEmail VARCHAR(255) NOT NULL,
+    projectName VARCHAR(255)  NOT NULL,
+    seenFlag BOOLEAN
+
 );
 
 CREATE TABLE  tasks  (
@@ -41,4 +53,4 @@ CREATE TABLE  tasks  (
 );
 
 
-COMMIT;
+COMMIT; 

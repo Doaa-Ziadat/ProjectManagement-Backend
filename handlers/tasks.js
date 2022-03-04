@@ -11,6 +11,7 @@ const get = (req, res) => {
 };
 
 const post = (req, res) => {
+  console.log("in add task");
   const data = req.body;
   const userId = data.userId;
   db.query(
