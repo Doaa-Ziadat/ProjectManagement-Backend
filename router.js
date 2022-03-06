@@ -15,6 +15,7 @@ router.post("/login", login.post);
 router.post("/add-project", checkAuth, projects.post);
 router.post("/add-member-pending", checkAuth, projects.addMemberPending);
 router.post("/add-member", checkAuth, projects.addMember);
+router.get("/get-members/:id", checkAuth, projects.getMembers);
 router.get("/projects", checkAuth, projects.get);
 router.get("/tasks/:id", checkAuth, tasks.get);
 router.post("/add-task", checkAuth, tasks.post);

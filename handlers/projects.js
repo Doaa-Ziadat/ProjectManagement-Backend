@@ -1,3 +1,4 @@
+const res = require("express/lib/response");
 const db = require("../database/connection");
 
 // add project
@@ -149,6 +150,39 @@ const get = (req, res) => {
     });
 };
 
-//edit project
+// display project member
+const getMembers = (req, res) => {
+  console.log("in get members");
+  console.log(req.params.id);
+  let datatoSent = [];
+  let i = 0;
+  db.query("SELECT userId FROM project_member WHERE projectid  = $1", [
+    req.params.id,
+  ])
 
-module.exports = { post, get, addMemberPending, addMember };
+    .then(async ({ rows }) => {
+      // array of promises
+      await Promise.all(
+        Array.from(rows).map((user) => {
+          return db
+            .query("SELECT name,email FROM users WHERE id=$1", [user.userid])
+            .then(({ rows }) => {
+              datatoSent.push(rows[0]);
+            })
+            .catch((err) => {
+              res.send(err);
+            });
+        })
+      );
+      console.log("data to send", datatoSent);
+
+      res.send(datatoSent);
+    })
+
+    .catch((err) => {
+      console.log(err);
+      res.send({ success: false });
+    });
+};
+
+module.exports = { post, get, addMemberPending, addMember, getMembers };

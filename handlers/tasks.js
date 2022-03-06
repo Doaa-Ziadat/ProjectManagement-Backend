@@ -36,7 +36,7 @@ const post = (req, res) => {
 
 const update = (req, res) => {
   const data = req.body;
-  console.log(data);
+  console.log("backenddd", data);
 
   // const userId = data.userId;
   //,userid=${data.userId}
