@@ -161,11 +161,12 @@ const getMembers = (req, res) => {
   ])
 
     .then(async ({ rows }) => {
+      console.log({ rows });
       // array of promises
       await Promise.all(
         Array.from(rows).map((user) => {
           return db
-            .query("SELECT name,email FROM users WHERE id=$1", [user.userid])
+            .query("SELECT id,name,email FROM users WHERE id=$1", [user.userid])
             .then(({ rows }) => {
               datatoSent.push(rows[0]);
             })
@@ -174,7 +175,6 @@ const getMembers = (req, res) => {
             });
         })
       );
-      console.log("data to send", datatoSent);
 
       res.send(datatoSent);
     })

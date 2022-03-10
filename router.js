@@ -42,7 +42,7 @@ router.get("/getCookies", (req, res) => {
 
 router.get("/getId/:email", id.get);
 
-// router.get("/getEmail/:id", email.get);
+router.get("/getEmail/:id", email.get);
 // router.get("/home", home);
 
 module.exports = router;
