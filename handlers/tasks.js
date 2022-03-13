@@ -3,7 +3,6 @@ const db = require("../database/connection");
 const get = (req, res) => {
   db.query("SELECT * FROM tasks WHERE projectId = $1", [req.params.id])
     .then(({ rows }) => {
-      // console.log(rows);
       res.send(rows);
     })
     .catch((err) => {
@@ -16,6 +15,7 @@ const post = (req, res) => {
   const data = req.body;
   const userId = data.userid;
   console.log("add", data);
+  console.log(userId);
   if (userId && userId != 0) {
     console.log("insert not true");
     db.query(

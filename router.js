@@ -8,7 +8,7 @@ const projects = require("./handlers/projects");
 const email = require("./handlers/email");
 const id = require("./handlers/id");
 const notifications = require("./handlers/notifications");
-
+const comments = require("./handlers/comments");
 const tasks = require("./handlers/tasks");
 router.post("/signup", signup.post);
 router.post("/login", login.post);
@@ -28,6 +28,8 @@ router.post(
   notifications.deleteNotification
 );
 
+router.post("/addComment", comments.upload, comments.addComment);
+router.get("/comments", comments.get);
 router.get("/logout", (req, res) => {
   res.clearCookie("user");
   res.clearCookie("__react_session__");

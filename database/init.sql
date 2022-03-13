@@ -1,6 +1,6 @@
 BEGIN;
 
-DROP TABLE IF EXISTS users, projects ,tasks, project_member, project_member_pending CASCADE;
+DROP TABLE IF EXISTS users, projects ,tasks, project_member, project_member_pending, comments CASCADE;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -48,9 +48,17 @@ CREATE TABLE  tasks  (
     timeline DATE NOT NULL,
     priority VARCHAR(255) ,
     processLabel VARCHAR(255) ,
-    userId INTEGER REFERENCES users(id),
+    userId INTEGER DEFAULT 0,  -- REFERENCES users(id)
     createdAt DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
+-- or remove REFERENCES users(id) 
+-- or create new table userid projectuf ( relationship became many to many)
+
+CREATE TABLE comments (
+       id SERIAL PRIMARY KEY,
+       image VARCHAR(255) ,
+       createdAt DATE NOT NULL DEFAULT CURRENT_DATE
+);
 
 COMMIT; 
