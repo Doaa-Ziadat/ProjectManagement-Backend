@@ -32,7 +32,14 @@ const upload = multer({
 
 const addComment = (req, res) => {
   // req.files.path for multiply files
-  db.query("INSERT INTO comments (image) VALUES ($1)", [req.file.path])
+  const data = req.body;
+  console.log(data);
+
+  const image = req.file ? req.file.path : " ";
+  db.query(
+    "INSERT INTO comments (image,projectId,userId,content) VALUES ($1,$2,$3,$4)",
+    [image, data.projectId, data.userId, data.content]
+  )
     .then((data) => {
       res.send({ success: true });
     })
@@ -42,8 +49,21 @@ const addComment = (req, res) => {
     });
 };
 
+// const get = (req, res) => {
+//   db.query("SELECT * FROM comments WHERE projectId = $1", [req.params.id])
+//     .then(({ rows }) => {
+//       res.send(rows);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// };
+
 const get = (req, res) => {
-  db.query("SELECT * FROM comments")
+  db.query(
+    "SELECT comments,* ,users.name FROM comments INNER JOIN users ON comments.userId = users.id WHERE comments.projectId = $1",
+    [req.params.id]
+  )
     .then(({ rows }) => {
       res.send(rows);
     })

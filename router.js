@@ -29,7 +29,7 @@ router.post(
 );
 
 router.post("/addComment", comments.upload, comments.addComment);
-router.get("/comments", comments.get);
+router.get("/comments/:id", comments.get);
 router.get("/logout", (req, res) => {
   res.clearCookie("user");
   res.clearCookie("__react_session__");

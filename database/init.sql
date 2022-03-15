@@ -52,13 +52,19 @@ CREATE TABLE  tasks  (
     createdAt DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
--- or remove REFERENCES users(id) 
--- or create new table userid projectuf ( relationship became many to many)
+-- CREATE TABLE comments (
+--        id SERIAL PRIMARY KEY,
+--        image VARCHAR(255) ,
+--        createdAt DATE NOT NULL DEFAULT CURRENT_DATE
+-- );
+
 
 CREATE TABLE comments (
        id SERIAL PRIMARY KEY,
        image VARCHAR(255) ,
+       projectId INTEGER REFERENCES projects(id),
+       userId INTEGER REFERENCES users(id),
+       content TEXT ,
        createdAt DATE NOT NULL DEFAULT CURRENT_DATE
 );
-
 COMMIT; 
