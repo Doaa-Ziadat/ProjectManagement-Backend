@@ -23,7 +23,7 @@ const post = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.send({ success: false });
+      res.send({ success: false, message: err });
     });
 };
 
