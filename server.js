@@ -34,6 +34,6 @@ app.use(router);
 //status images folder
 app.use("/images", express.static("./images"));
 
-app.listen(4000, () => {
+app.listen(process.env.PORT || 4000, () => {
   console.log("Running on http://localhost:4000");
 });
