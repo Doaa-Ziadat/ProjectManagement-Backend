@@ -5,6 +5,10 @@ dotenv.config();
 
 const connectionString = process.env.DATABASE_URL;
 
-const db = new pg.Pool({ connectionString });
+const isDev = (process.env.NODE_ENV || "development") === "development";
+const db = new pg.Pool({
+  connectionString,
+  ...(!isDev && { ssl: { rejectUnauthorized: false } }),
+});
 
 module.exports = db;
