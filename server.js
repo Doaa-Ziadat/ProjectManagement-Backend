@@ -7,7 +7,7 @@ const router = require("./router");
 const app = express();
 
 app.use(cors());
-app.enable("trust proxy");
+// app.enable("trust proxy");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
