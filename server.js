@@ -6,13 +6,7 @@ const router = require("./router");
 
 const app = express();
 
-app.use(
-  cors({
-    credentials: true,
-    origin: true,
-  })
-);
-// app.enable("trust proxy");
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
