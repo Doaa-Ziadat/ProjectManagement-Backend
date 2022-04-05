@@ -11,12 +11,9 @@ const get = (req, res) => {
 };
 
 const post = (req, res) => {
-  console.log("in add task");
   const data = req.body;
   const userId = data.userid;
-  console.log("add", data);
-  console.log(userId);
-  if (userId && userId != 0) {
+  if (userId) {
     console.log("insert not true");
     db.query(
       "INSERT INTO tasks(name,projectid,timeline,priority,processlabel,userid) VALUES($1,$2,$3,$4,$5,$6)",
@@ -60,7 +57,7 @@ const post = (req, res) => {
 const update = (req, res) => {
   const data = req.body;
   console.log("backenddd", data);
-  if (data.userid && data.userid != 0) {
+  if (data.userid != undefined) {
     db.query(
       `UPDATE tasks 
       SET name='${data.name} ',
